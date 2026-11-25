@@ -3,7 +3,7 @@
 <!-- STEP 6: paste your status badge on the line below -->
 
 This repository is a hands-on introduction to **GitHub Actions**: GitHub's built-in tool for running tasks automatically when something happens in your repository.
-
+.
 The "app" here is a tiny Python calculator (`app/calculator.py`) with a few tests (`tests/test_calculator.py`). The code is simple on purpose. Today's lesson is about the **automation around the code**.
 
 ---
