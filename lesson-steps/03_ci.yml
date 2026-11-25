@@ -1,0 +1,45 @@
+# ===================================================================
+# STEP 3 - A real CI (Continuous Integration) workflow
+# Copy this file to:  .github/workflows/ci.yml
+# ===================================================================
+#
+# Goal: every time code changes, automatically run the tests.
+# If a test fails, the run turns RED and everybody knows.
+#
+# New in this step:
+#   - "uses:" runs a ready-made ACTION written by someone else
+#   - "with:" passes settings (inputs) to an action
+#   - the pull_request trigger
+
+name: CI
+
+on:
+  push:
+  pull_request:   # also run when someone opens or updates a pull request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download the repository's code onto the runner.
+      #    (Remember step 2: without this, the folder is empty!)
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      # 2. Install the Python version we want.
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # 3. Install the libraries our project needs.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Run the tests. If any test fails, this step fails,
+      #    the job fails, and the workflow run shows a red X.
+      - name: Run the tests
+        run: pytest -v

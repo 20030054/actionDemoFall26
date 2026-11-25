@@ -1,0 +1,51 @@
+# ===================================================================
+# STEP 2 - Explore the runner
+# Copy this file OVER:  .github/workflows/hello.yml  (replace step 1)
+# ===================================================================
+#
+# New in this step:
+#   - a second trigger (workflow_dispatch = a "Run workflow" button)
+#   - several steps in one job
+#   - multi-line commands
+#   - CONTEXTS: ${{ ... }} values GitHub fills in for us
+#   - a surprise: the runner does NOT have our code yet!
+
+name: Hello World
+
+on:
+  push:                # run on every push (as before)
+  workflow_dispatch:   # NEW: also allow a manual "Run workflow" button
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say hello
+        run: echo "Hello, GitHub Actions!"
+
+      # ${{ github.actor }} etc. are replaced by GitHub before the step runs.
+      - name: Who, what and where?
+        run: |
+          echo "Triggered by:  ${{ github.actor }}"
+          echo "Event:         ${{ github.event_name }}"
+          echo "Repository:    ${{ github.repository }}"
+          echo "Branch:        ${{ github.ref_name }}"
+          echo "Commit:        ${{ github.sha }}"
+
+      # The runner is a real computer. Let's look at it.
+      - name: What machine are we on?
+        run: |
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Today is:  $(date)"
+          echo "Python:    $(python3 --version)"
+          echo "CPU cores: $(nproc)"
+
+      # Surprise! The working folder is EMPTY.
+      # The runner starts with nothing - not even our code.
+      # (Step 3 fixes this with the actions/checkout action.)
+      - name: Where is my code?
+        run: |
+          echo "Working directory: $(pwd)"
+          echo "Files here:"
+          ls -la

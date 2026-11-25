@@ -1,0 +1,28 @@
+# ===================================================================
+# STEP 1 - Your very first workflow
+# Copy this file to:  .github/workflows/hello.yml
+# ===================================================================
+#
+# A WORKFLOW is an automated process written in YAML.
+# GitHub finds it ONLY if it lives in the .github/workflows/ folder.
+
+# The name shown in the "Actions" tab of your repository.
+name: Hello World
+
+# The EVENT (trigger): WHEN should this workflow run?
+# "push" means: every time someone pushes a commit to this repo.
+on: push
+
+# A workflow is made of one or more JOBS.
+jobs:
+  # "say-hello" is the job's ID. You choose the name.
+  say-hello:
+    # The RUNNER: the machine GitHub gives us to run the job.
+    # A fresh Linux virtual machine, created just for this job
+    # and thrown away when the job ends.
+    runs-on: ubuntu-latest
+
+    # A job is a list of STEPS that run in order, top to bottom.
+    steps:
+      - name: Say hello
+        run: echo "Hello, GitHub Actions!"

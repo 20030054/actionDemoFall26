@@ -1,0 +1,57 @@
+# ===================================================================
+# BONUS STEP 8 - A manual workflow with a form, and two jobs
+# Copy this file to:  .github/workflows/greet.yml
+# ===================================================================
+#
+# New in this step:
+#   - workflow_dispatch INPUTS: the "Run workflow" button shows a form
+#   - ENVIRONMENT VARIABLES with "env:"
+#   - "if:" to run a step only sometimes
+#   - two jobs, where the second one WAITS for the first ("needs:")
+#
+# This workflow does NOT run on push. Start it from:
+#   Actions tab -> "Greet the class" -> "Run workflow"
+
+name: Greet the class
+
+on:
+  workflow_dispatch:
+    inputs:
+      student_name:
+        description: "Who should we greet?"
+        required: true
+        default: "Class"
+      shout:
+        description: "Shout the greeting?"
+        type: boolean
+        default: false
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+
+    # Good habit: put user-typed values into an environment variable,
+    # then use the variable ($NAME) in the command. Never paste
+    # user input directly into a script.
+    env:
+      NAME: ${{ inputs.student_name }}
+
+    steps:
+      - name: Normal greeting
+        if: ${{ !inputs.shout }}
+        run: echo "Hello, $NAME! Welcome to GitHub Actions."
+
+      - name: Loud greeting
+        if: ${{ inputs.shout }}
+        run: echo "HELLO, ${NAME^^}!!! WELCOME TO GITHUB ACTIONS!!!"
+
+  # Jobs run IN PARALLEL by default.
+  # "needs: greet" makes this job wait until "greet" has succeeded.
+  goodbye:
+    needs: greet
+    runs-on: ubuntu-latest
+    env:
+      NAME: ${{ inputs.student_name }}
+    steps:
+      - name: Say goodbye
+        run: echo "Goodbye, $NAME. See you next class!"
